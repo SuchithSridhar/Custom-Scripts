@@ -1,0 +1,31 @@
+#!/bin/bash
+
+while [[ $# -gt 0 ]]
+do
+    key="$1" 
+    case $key in
+        -n|--no-notification)
+            NOTIFICATION="no"
+            shift
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift
+            ;;
+    esac
+done
+
+for t in ${POSITIONAL[@]}; do
+    x="no"
+    if [ "$NOTIFICATION" != "no" ]; then
+        notify-send -i $HOME/.local/share/icons/key.png "Encryption" "Encryption started for $t" -a "Encryption"
+    fi
+
+    gpg2 --output $t.gpg --encrypt --recipient suchithsridhar@gmail.com $t && \rm -f $t && x="yes"
+
+    if [ "$NOTIFICATION" != "no" ] && [ "$x" = "yes" ]; then
+        notify-send -i $HOME/.local/share/icons/key.png "Encryption" "Encryption Completed for $t" -a "Encryption"
+    elif [ "$x" = "no" ]; then
+        notify-send -i $HOME/.local/share/icons/key.png -u "critical" "Encryption" "Encryption failed for $t" -a "Encryption"
+    fi
+done

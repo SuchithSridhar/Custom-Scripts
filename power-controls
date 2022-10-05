@@ -1,0 +1,69 @@
+#!/bin/bash
+
+function close_apps() {
+    BRAVE=`wmctrl -l | grep -i "brave" | wc -l`
+    CHROMIUM=`wmctrl -l | grep -i "chromium" | wc -l`
+
+    if [ "$BRAVE" -gt "1" ]; then
+        dunstify "Brave multiple windows open"
+        exit 1
+    elif [ "$CHROMIUM" -gt "1" ]; then
+        dunstify "Chromium multiple windows open"
+        exit 1
+    fi
+
+    i3-msg "[class=\".*\"] kill"
+    sleep 1
+
+    COUNT=`wmctrl -l | wc -l`
+    if [ "$COUNT" -eq "0" ]; then
+        return ;
+        # shutdown since no more applicaiton open
+    else
+        dunstify "Some apps didn't close. Not shutting down."
+        exit 1
+    fi
+}
+
+function lock_screen() {
+    betterlockscreen -l dim -- --time-str="%H:%M" &
+}
+
+case "$1" in
+        shutdown)
+            if (zenity --question --text "Shutdown. Are you sure?"); then
+                close_apps
+                systemctl poweroff
+            fi
+             ;;
+        reboot | restart)
+            if (zenity --question --text "Reboot. Are you sure?"); then
+                close_apps
+                systemctl reboot
+            fi
+            ;;
+
+        suspend)
+            lock_screen
+            sleep 3
+            systemctl suspend
+            ;;
+
+        hibernate)
+            lock_screen
+            systemctl hibernate
+            ;;
+
+        logout)
+            close_apps
+            i3-msg exit
+            ;;
+
+        lock)
+            lock_screen
+            ;;
+
+        *)
+            echo $"Usage: $0 {start|stop|restart}"
+            exit 1
+esac

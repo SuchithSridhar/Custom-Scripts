@@ -1,0 +1,33 @@
+#!/bin/bash
+
+NOTIFICATION="yes"
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+    key="$1" 
+    case $key in
+        -n|--no-notification)
+        NOTIFICATION="no"
+        shift
+        ;;
+        *)
+        POSITIONAL+=("$1") 
+        shift 
+        ;;
+    esac
+done
+
+for t in ${POSITIONAL[@]}; do
+    x="no"
+    if [ "$NOTIFICATION" != "no" ]; then
+        notify-send -i $HOME/.local/share/icons/key.png "Decryption" "Decryption started for $t" -a "Encryption"
+    fi
+
+    gpg2 --output $(basename $t .gpg) --decrypt $t && x="yes"
+
+    if [ "$NOTIFICATION" != "no" ] && [ "$x" = "yes" ]; then
+        notify-send -i $HOME/.local/share/icons/key.png "Decryption" "Decryption ended for $t" -a "Encryption"
+    elif [ "$x" = "no" ]; then
+        notify-send -i $HOME/.local/share/icons/key.png -u "critical" "Decryption" "Decryption failed for $t" -a "Encryption"
+    fi
+done
