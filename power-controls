@@ -31,16 +31,12 @@ function lock_screen() {
 
 case "$1" in
         shutdown)
-            if (zenity --question --text "Shutdown. Are you sure?"); then
                 close_apps
                 systemctl poweroff
-            fi
              ;;
         reboot | restart)
-            if (zenity --question --text "Reboot. Are you sure?"); then
                 close_apps
                 systemctl reboot
-            fi
             ;;
 
         suspend)
