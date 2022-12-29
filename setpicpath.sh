@@ -1,4 +1,10 @@
 #!/bin/sh
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+#
+# Set the path for the program that
+# "notes-screenshot-copy.sh" uses to save
+# pictures.
 
 if [ "$1" != "" ]; then
     if [ -d "$1" ]; then

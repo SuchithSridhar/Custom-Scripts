@@ -1,4 +1,8 @@
 #!/bin/sh
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+#
+# Toggle the polybar
 
 flag=0
 killall -q polybar && flag=1

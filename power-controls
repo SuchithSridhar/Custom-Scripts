@@ -1,4 +1,15 @@
 #!/bin/bash
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+#
+# This script is used to manage power based controls
+# these are things like shutdown, lock and, logout.
+# 
+# Before performing some of these operations we call the
+# close_apps function which handles the closing of things like
+# browsers and other apps. If there are app that can't be closed
+# without losing data then the power operation is cancelled and a
+# notification about the cause of the cancellation is sent.
 
 function close_apps() {
     BRAVE=`wmctrl -l | grep -i "brave" | wc -l`

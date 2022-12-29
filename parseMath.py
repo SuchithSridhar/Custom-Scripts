@@ -1,4 +1,11 @@
 #!/bin/python3
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+
+# Parse a file and replace all the characters sequences specified
+# with the unicode characters. This is based on the character file:
+# ~/.config/custom-config/math-characters.csv
+
 import sys
 import csv
 

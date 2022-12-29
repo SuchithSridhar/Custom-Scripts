@@ -1,3 +1,7 @@
+#!/bin/bash
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+#
 # Isolate an image in a temp director
 # and open it in nomacs
 

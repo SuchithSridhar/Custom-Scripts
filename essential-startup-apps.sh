@@ -1,4 +1,6 @@
 #!/bin/sh
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
 
 setsid -f syncthing
 setsid -f blueman-applet

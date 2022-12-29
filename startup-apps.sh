@@ -1,9 +1,14 @@
 #!/bin/bash
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+#
+# The startup application to be launched when the computer
+# first boots. These are based on the current network
+# connectivity.
 
 if [ "$1" == "force" ]; then
         brave &
         chromium &
-        firefox &
         syncthing &
 
 elif [ ! -z "$1" ]; then
@@ -13,9 +18,8 @@ elif [ ! -z "$1" ]; then
 
 fi
 
-$HOME/.local/bin/custom-scripts/keycounter.py & echo $! > /home/suchi/.config/custom-config/keycounter-pid.txt
 if (xrandr | grep "HDMI-A-0 connected" && xrandr | grep "DisplayPort-0 connected"); then
-    $HOME/.sl/2-horizontal.sh
+    $HOME/.sl/3-horizontal.sh
 fi
 
 COUNTER=0;

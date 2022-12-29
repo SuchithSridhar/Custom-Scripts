@@ -1,4 +1,11 @@
 #!/bin/bash
+# Author: Suchith Sridhar
+# Website: https://suchicodes.com/
+#
+# Encrypt a file that's been encrypted using GPG.
+# Command: ./encryptfile [ -n | --no-notificaiton ] [FILE]...
+# -n, --no-notification flag prevents notification from being generated.
+# FILE(s) that are to be encrypted.
 
 while [[ $# -gt 0 ]]
 do
@@ -18,14 +25,25 @@ done
 for t in ${POSITIONAL[@]}; do
     x="no"
     if [ "$NOTIFICATION" != "no" ]; then
-        notify-send -i $HOME/.local/share/icons/key.png "Encryption" "Encryption started for $t" -a "Encryption"
+        notify-send -i $HOME/.local/share/icons/key.png \
+            "Encryption" \
+            "Encryption started for $t" \
+            -a "Encryption"
     fi
 
-    gpg2 --output $t.gpg --encrypt --recipient suchithsridhar@gmail.com $t && \rm -f $t && x="yes"
+    gpg2 --output $t.gpg --encrypt \
+        --recipient suchithsridhar@gmail.com $t && \rm -f $t && x="yes"
 
     if [ "$NOTIFICATION" != "no" ] && [ "$x" = "yes" ]; then
-        notify-send -i $HOME/.local/share/icons/key.png "Encryption" "Encryption Completed for $t" -a "Encryption"
+        notify-send -i $HOME/.local/share/icons/key.png \
+            "Encryption" \
+            "Encryption Completed for $t" \
+            -a "Encryption"
     elif [ "$x" = "no" ]; then
-        notify-send -i $HOME/.local/share/icons/key.png -u "critical" "Encryption" "Encryption failed for $t" -a "Encryption"
+        notify-send -i $HOME/.local/share/icons/key.png \
+            -u "critical" \
+            "Encryption" \
+            "Encryption failed for $t" \
+            -a "Encryption"
     fi
 done
