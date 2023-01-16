@@ -16,7 +16,7 @@
 # */5 * * * * <script-location>
 
 minBattery=20
-maxBattery=100
+maxBattery=95
 
 export DISPLAY=:0
 
