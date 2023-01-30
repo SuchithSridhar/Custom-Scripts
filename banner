@@ -3,7 +3,7 @@
 # Website: https://suchicodes.com/
 # Example of fonts: https://github.com/xero/figlet-fonts/blob/master/Examples.md
 
-FONT_BASE="$HOME/.config/custom-config/figlet-fonts"
+FONT_BASE="$HOME/.local/share/custom-share/figlet-fonts"
 
 case "$1" in
     "1")
