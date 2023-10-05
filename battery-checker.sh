@@ -17,8 +17,12 @@
 
 minBattery=20
 maxBattery=95
+fullBattery=100
 
-export DISPLAY=:0
+export DISPLAY=":0.0"
+export XAUTHORITY="/home/suchi/.Xauthority"
+export XDG_RUNTIME_DIR="/run/user/1000"
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 
 battery_level=`acpi -b | grep -P -o '[0-9]+(?=%)' | grep -vw "0"`
 not_charging=`acpi -b | grep -i " charging,"`
@@ -29,7 +33,14 @@ then
     /usr/bin/mpg123 /home/suchi/.local/share/sounds/low_battery.mp3
 fi
 
-if [ "$battery_level" -ge "$maxBattery" ] && [ "$not_charging" != "" ]
+if [ "$battery_level" -ge "$fullBattery" ] && [ "$not_charging" != "" ]
+then
+    export GOTIFY_SKIP_VERIFY_TLS=True
+    /usr/bin/gotify push "Laptop battery full." > /home/suchi/output.txt
+    /usr/bin/notify-send "Battery charged" "Battery at ${battery_level}%." -a "Script"
+
+elif [ "$battery_level" -ge "$maxBattery" ] && [ "$not_charging" != "" ]
 then
     /usr/bin/notify-send "Battery charged" "Battery at ${battery_level}%." -a "Script"
 fi
+

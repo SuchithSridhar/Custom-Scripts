@@ -11,22 +11,37 @@
 #  ░░░░░░░░░   ░░░░░░░░░                            
 #                                                    
 # =============================================================
-# script to help edit other similar scripts
+# A script to launch a floating alacritty terminal on the currently
+# focused monitor.
+# Deps:
+# - i3 window manager
+# - xdotool
+# - tmux (For continued session)
 # =============================================================
 
 
-# Add new script dirs on new line
-SCRIPT_DIR="$HOME/.local/bin/custom-scripts/"
+TERM=alacritty
+TERM_NAME="Floating-Terminal"
+OPTIONS="--title $TERM_NAME --class $TERM_NAME"
+COMMAND="tmux new-session -A -s $TERM_NAME"
+MONITOR_WIDTH=1920
+X_OFFSET=20
+Y_OFFSET=55
+TERM_WIDTH=700
+TERM_HEIGHT=500
 
-if [ -d "$SCRIPT_DIR" ]; then
-    FILES=`find "$SCRIPT_DIR" -type f -not -path "*/.git/*" -printf "%f\n"`
-    FILE=`echo "$FILES" | \
-        fzf --preview "bat --color=always \
-                        --line-range :200 \
-                        --style=plain $SCRIPT_DIR/{}"`
+# Check if there's alright a floating-terminal
+WIN_ID=`xdotool search --onlyvisible --name "$TERM_NAME"`
+if (xdotool search --onlyvisible --name "$TERM_NAME"); then
+    xdotool windowkill $WIN_ID
+    exit 0
 fi
 
-
-if [ -f "$SCRIPT_DIR/$FILE" ]; then
-    nvim "$SCRIPT_DIR/$FILE"
-fi
+alacritty $OPTIONS --command $COMMAND &
+MOUSE_X=`xdotool getmouselocation --shell | grep "X=" | cut -d= -f2`
+TERM_X=`echo "$MOUSE_X - ($MOUSE_X % $MONITOR_WIDTH) + $X_OFFSET" | bc`
+TERM_Y=$Y_OFFSET
+sleep 0.2
+WIN_ID=`xdotool search --onlyvisible --name "$TERM_NAME"`
+xdotool windowsize $WIN_ID $TERM_WIDTH $TERM_HEIGHT
+xdotool windowmove $WIN_ID $TERM_X $TERM_Y

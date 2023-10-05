@@ -1,4 +1,4 @@
-#!/bin/usr/python3
+#!/usr/bin/python3
 # =============================================================
 #
 #   █████████   █████████
@@ -20,14 +20,12 @@ import pyperclip
 
 # Note, ensure you are under right tag
 # tag cannot be added automatically
-time = "5pm"
-priority = "high"
-start = 3
-type = "Lab"
-couse = "cs22"
-dates = [
-        "Feb 3rd", "Feb 25th", "March 3rd", "March 17th", "March 24th", "March 31st"
-]
+time = input("time(ex: 5pm): ")
+priority = input("priority(ex: high): ")
+start = int(input("start int(ex: 1): "))
+type = input("type (ex: Lab): ")
+couse = input("course (ex: cs22): ")
+dates = input("dates comma separated (ex: Feb 3rd,feb 25th):").split(",")
 string = "{} {} {} {} {} !{}"
 
 for index, item in enumerate(dates):

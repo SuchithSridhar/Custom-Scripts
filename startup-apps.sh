@@ -9,28 +9,32 @@
 if [ "$1" == "force" ]; then
         brave &
         chromium &
-        syncthing &
-
 elif [ ! -z "$1" ]; then
     echo "Invalid option: $1"
     echo "option: 'force'"
     exit 1
-
 fi
 
-if (xrandr | grep "HDMI-A-0 connected" && xrandr | grep "DisplayPort-0 connected"); then
-    $HOME/.sl/3-horizontal.sh
+# Configure Displays
+if (xrandr | grep "HDMI-A-0 connected"); then
+    if (xrandr | grep "DisplayPort-0 connected"); then
+        $HOME/.local/bin/custom-scripts/configure-displays.sh edp-hdmi-usbc
+    else
+        $HOME/.local/bin/custom-scripts/configure-displays.sh edp-hdmi
+    fi
+elif (xrandr | grep "DisplayPort-0 connected"); then
+    $HOME/.local/bin/custom-scripts/configure-displays.sh edp-usbc
 fi
 
 COUNTER=0;
 while true; do
-    if ( nmcli | grep " connected" ); then
+    if ( nmcli | grep "wlp2s0: connected" ); then
+        SSID=$(nmcli -t -f active,ssid dev wifi | egrep '^yes' | cut -d\: -f2)
         notify-send.py --icon=$HOME/.local/share/icons/wifi.png \
             "Connection Status" "Connected to Wifi" -a "startup-apps.sh" \
             && notify-send "Connected to wifi"
         brave &
         chromium &
-        syncthing &
         break;
     fi
 
