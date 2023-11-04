@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+# Author: GPT-4 prompted by Suchith Sridhar
+# Date: 2023, Oct 20
+# Required libraries:
+#   ueberzug
+
+import os
+import sys
+import subprocess
+import contextlib
+import tty
+import termios
+import json
+
+UEBERZUG_BINARY = "ueberzug"
+
+
+def get_terminal_size():
+    rows, columns = os.popen('stty size', 'r').read().split()
+    return int(columns), int(rows)
+
+
+@contextlib.contextmanager
+def raw_mode(file):
+    old_attrs = termios.tcgetattr(file.fileno())
+    tty.setraw(file.fileno())
+    yield
+    termios.tcsetattr(file.fileno(), termios.TCSADRAIN, old_attrs)
+
+
+def display_image_with_ueberzug(filepath):
+    width, height = get_terminal_size()
+    command = {
+        "action": "add",
+        "identifier": "img_display",
+        "path": filepath,
+        "x": 0,
+        "y": 0,
+        "max_width": width,
+        "max_height": height,
+        "scaler": "contain"
+    }
+
+    remove_command = {
+        "action": "remove",
+        "identifier": "img_display"
+    }
+
+    with subprocess.Popen([UEBERZUG_BINARY, 'layer', '--parser', 'json'],
+                          stdin=subprocess.PIPE,
+                          stdout=subprocess.PIPE,
+                          bufsize=1,
+                          universal_newlines=True) as process:
+
+        print(json.dumps(command), file=process.stdin, flush=True)
+
+        with raw_mode(sys.stdin):
+            while True:
+                ch = sys.stdin.read(1)
+                if ch in ['q', '\x1b', '\x03']:
+                    break
+
+        print(json.dumps(remove_command), file=process.stdin, flush=True)
+        process.stdin.close()
+        process.wait()
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} path_to_image")
+        sys.exit(1)
+
+    image_path = sys.argv[1]
+    if not os.path.exists(image_path):
+        print(f"Error: Image '{image_path}' not found.")
+        sys.exit(1)
+
+    display_image_with_ueberzug(image_path)
+
+
+if __name__ == "__main__":
+    main()

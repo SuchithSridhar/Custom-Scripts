@@ -11,7 +11,7 @@
 #  ░░░░░░░░░   ░░░░░░░░░                            
 #                                                    
 # =============================================================
-# A script to launch a floating alacritty terminal with ranger
+# A script to launch a floating kitty terminal with ranger
 # on the currently focused monitor.
 # Deps:
 # - i3 window manager
@@ -21,7 +21,7 @@
 # =============================================================
 
 
-TERM=alacritty
+TERM=kitty
 TERM_NAME="Ranger-Terminal"
 OPTIONS="--title $TERM_NAME --class $TERM_NAME"
 COMMAND="tmux new-session -A -s $TERM_NAME"
@@ -38,7 +38,7 @@ if (xdotool search --onlyvisible --name "$TERM_NAME"); then
     exit 0
 fi
 
-alacritty $OPTIONS --command $COMMAND &
+kitty $OPTIONS $COMMAND &
 MOUSE_X=`xdotool getmouselocation --shell | grep "X=" | cut -d= -f2`
 TERM_X=`echo "$MOUSE_X - ($MOUSE_X % $MONITOR_WIDTH) - $X_OFFSET - $TERM_WIDTH + $MONITOR_WIDTH" | bc`
 TERM_Y=$Y_OFFSET

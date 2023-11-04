@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# -B black: Set background color to black
+# --scale-down: Have image fit in window
+feh -B black --scale-down $@

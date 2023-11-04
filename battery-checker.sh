@@ -36,7 +36,7 @@ fi
 if [ "$battery_level" -ge "$fullBattery" ] && [ "$not_charging" != "" ]
 then
     export GOTIFY_SKIP_VERIFY_TLS=True
-    /usr/bin/gotify push "Laptop battery full." > /home/suchi/output.txt
+    /usr/bin/gotify push "Laptop battery full." -p 9
     /usr/bin/notify-send "Battery charged" "Battery at ${battery_level}%." -a "Script"
 
 elif [ "$battery_level" -ge "$maxBattery" ] && [ "$not_charging" != "" ]

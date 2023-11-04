@@ -9,7 +9,7 @@ killall -q polybar && flag=1
 
 if [ "$flag" == "0" ]; then
     $HOME/.config/polybar/launch.sh > /dev/null 2>&1
-    i3-msg gaps top all set 38
+    i3-msg gaps top all set 32
 else
-    i3-msg gaps top all set 5
+    i3-msg gaps top all set 0
 fi

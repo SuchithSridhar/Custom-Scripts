@@ -4,12 +4,12 @@
 #
 # Toggle the current state of the mic
 
-MIC = "Capture"
-
-amixer set Capture toggle
-
-if ( amixer | grep "$MIC" -A 5 | grep "\[on\]" ); then
-    dunstify "Microphone Toggled" "Mic State: ON"
+# Send the notification before the toggling
+# because the 'toggle' command takes a second
+if ( amixer | grep "Capture" | grep -q "off" ); then
+    dunstify " Microphone Toggled" "Mic State: ON"
 else
-    dunstify "Microphone Toggled" "Mic State: OFF"
+    dunstify " Microphone Toggled" "Mic State: OFF"
 fi
+
+amixer set "Capture" toggle

