@@ -79,5 +79,5 @@ esac
 
 sleep 1
 
-nitrogen --restore
+setWallpaper.sh "called from configure-displays.sh"
 i3-msg "restart"

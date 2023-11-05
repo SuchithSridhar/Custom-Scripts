@@ -7,6 +7,12 @@
 # from wallpaper directory.
 
 WAL_DIR="$HOME/.config/custom-config/wallpaper/"
+LOG_DIR="$HOME/.local/logs"
+LOG_FILE="$LOG_DIR/setWallpaper.sh.log"
+
+if [ ! -z "$1" ] && [ -d "$LOG_DIR" ]; then
+    echo "$(date) :: $1" >> $LOG_FILE
+fi
 
 FILE=`find "$WAL_DIR" -type f | shuf -n 1`
 
