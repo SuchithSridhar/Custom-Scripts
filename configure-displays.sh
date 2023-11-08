@@ -80,5 +80,4 @@ esac
 sleep 1
 
 /home/suchi/.local/bin/custom-scripts/setWallpaper.sh "called from configure-displays.sh"
-notify-send "testing"
 i3-msg "restart"
