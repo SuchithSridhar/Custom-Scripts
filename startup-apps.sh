@@ -24,6 +24,8 @@ if (xrandr | grep "HDMI-A-0 connected"); then
     fi
 elif (xrandr | grep "DisplayPort-0 connected"); then
     $HOME/.local/bin/custom-scripts/configure-displays.sh edp-usbc
+else
+    $HOME/.local/bin/custom-scripts/setWallpaper.sh "called from startup-apps.sh"
 fi
 
 COUNTER=0;
