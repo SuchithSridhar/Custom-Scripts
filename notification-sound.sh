@@ -4,4 +4,4 @@
 #
 # Play the notification sound
 
-/usr/bin/mplayer -radio volume=10 /home/suchi/.local/share/sounds/pristine-notification.mp3
+/usr/bin/mpg123 /home/suchi/.local/share/sounds/pristine-notification.mp3

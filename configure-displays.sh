@@ -39,38 +39,32 @@ case "$1" in
     # Two Horizontal Displays
     edp-hdmi)
         xrandr \
-            --output eDP --mode 1920x1080 --pos 1920x0 --rotate normal \
-            --output HDMI-A-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal \
+            --output eDP --mode 1920x1080 --pos 0x0 --rotate normal \
+            --output HDMI-A-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal \
         ;;
     edp-usbc)
         xrandr \
-            --output eDP --mode 1920x1080 --pos 1920x0 --rotate normal \
-            --output DisplayPort-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal
+            --output eDP --mode 1920x1080 --pos 0x0 --rotate normal \
+            --output DisplayPort-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal
         ;;
     hdmi-usbc)
         xrandr \
-            --output HDMI-A-0 --mode 1920x1080 --pos 1920x0 --rotate normal \
-            --output DisplayPort-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal
+            --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal \
+            --output DisplayPort-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal
         ;;
 
     # Triple displays
     edp-hdmi-usbc)
         xrandr \
-            --output eDP --mode 1920x1080 --pos 3840x0 --rotate normal \
+            --output eDP --mode 1920x1080 --pos 0x0 --rotate normal \
             --output HDMI-A-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal \
-            --output DisplayPort-0 --mode 1920x1080 --pos 0x0 --rotate normal
+            --output DisplayPort-0 --mode 1920x1080 --pos 3840x0 --rotate normal
         ;;
     edp-hdmi-vusbc)
         xrandr \
             --output eDP --mode 1920x1080 --pos 0x420 --rotate normal \
             --output HDMI-A-0 --primary --mode 1920x1080 --pos 1920x420 --rotate normal \
             --output DisplayPort-0 --mode 1920x1080 --pos 3840x0 --rotate right
-        ;;
-
-    mama-displays)
-        xrandr \
-            --output DVI-I-2-2 --mode 1920x1080 --pos 1920x0 --rotate normal \
-            --output DVI-I-1-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal
         ;;
     *)
         echo "Invalid option for configuring displays"
