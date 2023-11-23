@@ -1,0 +1,8 @@
+#!/bin/bash
+# Author: Suchith Sridhar
+# Date: 2023-11-19
+# Purpose: Intended to replace an alias because
+# the ranger file-explorer doesn't identify aliases
+# but it does identify scripts.
+
+dragon-drop -x -a $@
