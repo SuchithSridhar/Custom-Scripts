@@ -11,31 +11,38 @@
 #  ░░░░░░░░░   ░░░░░░░░░                            
 #                                                    
 # =============================================================
-# A script to launch a floating kitty terminal with ranger
+# A script to launch a floating kitty terminal with qalc
 # on the currently focused monitor.
 # Deps:
 # - i3 window manager
-# - ranger
+# - qalc
 # - xdotool
 # - tmux (For continued session)
 # =============================================================
 
 
+APP="qalc"
 TERM=kitty
-TERM_NAME="Ranger-Terminal"
+TERM_NAME="Floating-Calculator"
 OPTIONS="--title $TERM_NAME --class $TERM_NAME"
-COMMAND="tmux new-session -A -s $TERM_NAME"
 MONITOR_WIDTH=1920
-X_OFFSET=20
-Y_OFFSET=250
 TERM_WIDTH=700
-TERM_HEIGHT=500
+TERM_HEIGHT=200
+X_OFFSET=20
+Y_OFFSET=50
 
 # Check if there's alright a floating-terminal
 WIN_ID=`xdotool search --onlyvisible --name "$TERM_NAME"`
 if (xdotool search --onlyvisible --name "$TERM_NAME"); then
     xdotool windowkill $WIN_ID
     exit 0
+fi
+
+tmux has-session -t "$TERM_NAME" > /dev/null 2>&1
+if [ $? != 0 ]; then
+    COMMAND="tmux new-session -s $TERM_NAME \"$APP\""
+else
+    COMMAND="tmux attach-session -t $TERM_NAME"
 fi
 
 kitty $OPTIONS $COMMAND &
